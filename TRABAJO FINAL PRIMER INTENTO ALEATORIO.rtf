@@ -1,0 +1,358 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang3082{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.18362}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang10 using UnityEngine.UI;\par
+using UnityEngine;\par
+using UnityEngine.SceneManagement;\par
+public class Grid2D : MonoBehaviour\par
+\{\par
+\par
+   \par
+    public Color color1;                         //declaracion de variable publica color 1\par
+    public Color color2;                         //declaracion de variable publica color 2 \par
+    private Color yellow;                         \par
+    private bool primerturno;                    //decalracion de variable booleana\par
+    public Color colorfondo;                     //declaracion de variable publica color fondo\par
+    private GameObject[,] grid;                  //declaracion de variable privada de un objeto esfera\par
+    public int height;                           //declaracion de variable publica de altura\par
+    public int width;                            //declaracion de variable publica de ancho\par
+    //private int  Xaleatorio ;\par
+   // private int  Yaletaorio ;\par
+    \par
+    void Start()\par
+    \{\par
+\par
+            \par
+\par
+        grid = new GameObject[width, height];                                               //el objeto se ubica en una posicion en altura y ancho\par
+        for (int i = 0; i < width; i++)                                                     //se inicia el siclo de poner esferas a lo ancho\par
+        \{\par
+            \par
+            for (int j = 0; j < height; j++)                                                //se inicia el siclo de ponera esferas a lo alto\par
+            \{\par
+               \par
+                var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);                  //se almacena una un objeto tipo esfera\par
+                go.transform.position= new Vector3(i,j,0);                                  //la esfera almacenada se ubica enuna pocicion en el vector 3\par
+                grid[i,j]=go;                                                               //coordenadas del objeto en x ,y\par
+\par
+                go.GetComponent<Renderer>().material.color = colorfondo;              //se crea un material de tipo color\par
+             \par
+\par
+\par
+                grid[i, j] = go;                                                            //el objeto grid es igual al a la variable go\par
+            \}\par
+\par
+        \}\par
+    \}\par
+\par
+    void Update()\par
+    \{\par
+\par
+\par
+        \par
+        Vector3 mPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);           //posicion del la camara en vector \par
+        UpdatePickedPiece(mPosition);\par
+        \par
+\par
+      \par
+    \}\par
+\par
+\par
+    void UpdatePickedPiece(Vector3 position)\par
+    \{\par
+        int i = (int)(position.x + 0.5f);                                                   //variable i se ubica en una pocicion x\par
+        int j = (int)(position.y + 0.5f);                                                   //variable j se ubica en una pocicion y\par
+        //Xaleatorio = Random.Range (0,10);\par
+        // Yaletaorio = Random.Range (0,10);\par
+\par
+        if (Input.GetButtonDown("Fire1"))\par
+        \{\par
+            if (i >= 0 && j >= 0 && i < width && j< height)                                 //variable i y variable j se ubican alo ancho y a lo alto\par
+            \{\par
+                GameObject go=grid[i,j];                                                    //el objeto se pone en el espacio i y en el j\par
+               // GameObject go1=grid[Xaleatorio,Yaletaorio]; \par
+                if (go.GetComponent<Renderer>().material.color == colorfondo)               //se renderisa el color del fondo\par
+                \{\par
+                    Color colorAUsar = Color.clear;                                         //escoger color para\par
+                    if (primerturno)\par
+                    \{\par
+                        colorAUsar = color2;\par
+                    \}                   \par
+\par
+                    else\par
+                    \{\par
+                        colorAUsar = color1;\par
+                    \} \par
+                 \par
+\par
+                    go.GetComponent<Renderer>().material.color = colorAUsar;\par
+                   // go1.GetComponent<Renderer>().material.color = Color.yellow;\par
+                    primerturno = !primerturno;\par
+                    VerificadorX(i, j, colorAUsar);\par
+                    VerificadorX1(i, j, colorAUsar);\par
+                    VerificadorY(i, j, colorAUsar);\par
+                    VerificadorY1(i, j, colorAUsar);\par
+                    DiagoPositiva(i, j, colorAUsar);\par
+                    DiagoPositiva1(i, j, colorAUsar);\par
+                    DiagoNegativa(i, j, colorAUsar);\par
+                    DiagoNegativa1(i, j, colorAUsar);\par
+                   \par
+\par
+                \}\par
+            \}\par
+        \}\par
+    \}\par
+  \par
+      public void VerificadorX(int x, int y, Color colorVerificar)\par
+    \{\par
+        int contador = 0;\par
+        for (int i = x-3; i <= x+3; i++)\par
+        \{\par
+            if (i < 0 || i >= width)\par
+                continue;\par
+\par
+            GameObject go = grid[i, y];\par
+\par
+            if (go.GetComponent<Renderer>().material.color == colorVerificar)\par
+            \{\par
+                if (go.GetComponent<Renderer>().material.color == color1)\par
+                \{\par
+                contador++;\par
+                    \par
+\par
+                if (contador == 4)\par
+                \{\par
+                    Debug.Log("ganaste jugador 1");\par
+                    SceneManager.LoadScene(2);\par
+\par
+                \}\par
+            \}\par
+            else\par
+                contador = 0;\par
+            \}\par
+        \}\par
+    \}\par
+\par
+  public void VerificadorX1(int x, int y, Color colorVerificar)\par
+    \{\par
+        int contador = 0;\par
+        for (int i = x-3; i <= x+3; i++)\par
+        \{\par
+            if (i < 0 || i >= width)\par
+                continue;\par
+\par
+            GameObject go = grid[i, y];\par
+\par
+            if (go.GetComponent<Renderer>().material.color == colorVerificar)\par
+            \{\par
+                if (go.GetComponent<Renderer>().material.color == color1)\par
+                \{\par
+                contador++;\par
+                    \par
+\par
+                if (contador == 4)\par
+                \{\par
+                    Debug.Log("ganaste jugador 1");\par
+                    SceneManager.LoadScene(2);\par
+\par
+                \}\par
+            \}\par
+            else\par
+                contador = 0;\par
+            \}\par
+        \}\par
+    \}\par
+    public void VerificadorY(int x, int y, Color colorVerificar)\par
+    \{\par
+        int contador = 0;\par
+        for (int j = y - 3; j <= y + 3; j++)\par
+        \{\par
+            if (j < 0 || j >= height)\par
+                continue;\par
+\par
+            GameObject go = grid[x, j];\par
+\par
+            if (go.GetComponent<Renderer>().material.color == colorVerificar)\par
+            \{\par
+                if (go.GetComponent<Renderer>().material.color == color1)\par
+                \{\par
+                contador++;\par
+                if (contador == 4)\par
+                \{\par
+                    Debug.Log("ganaste juagador 1");\par
+                    SceneManager.LoadScene(2);\par
+                \}\par
+            \}\par
+            else\par
+                contador = 0;\par
+        \}\par
+        \}\par
+    \}\par
+ public void VerificadorY1(int x, int y, Color colorVerificar)\par
+    \{\par
+        int contador = 0;\par
+        for (int j = y - 3; j <= y + 3; j++)\par
+        \{\par
+            if (j < 0 || j >= height)\par
+                continue;\par
+\par
+            GameObject go = grid[x, j];\par
+\par
+            if (go.GetComponent<Renderer>().material.color == colorVerificar)\par
+            \{\par
+                if (go.GetComponent<Renderer>().material.color == color2)\par
+                \{\par
+                contador++;\par
+                if (contador == 4)\par
+                \{\par
+                    Debug.Log("ganaste juagador 2");\par
+                    SceneManager.LoadScene(3);\par
+                \}\par
+            \}\par
+            else\par
+                contador = 0;\par
+        \}\par
+        \}\par
+    \}\par
+    public void DiagoPositiva(int x, int y, Color colorAVerificando)\par
+    \{\par
+        int contador = 0;\par
+        int j = y - 4;\par
+\par
+\par
+        for (int i = x - 3; i <= x + 3; i++ )\par
+        \{\par
+            j++;\par
+            if (j < 0 || j >= height || i < 0 || i >= width)\par
+                continue;\par
+\par
+                GameObject go =grid[i, j];\par
+               \par
+                //Debug.Log(go.GetComponent<Renderer>().material.color=color.yellow);\par
+                //Debug.Log(colorAVerificando);\par
+                if (go.GetComponent<Renderer>().material.color == colorAVerificando)\par
+                \{\par
+                    if (go.GetComponent<Renderer>().material.color == color1)\par
+                    \{\par
+                    contador++;\par
+                    \par
+\par
+                    if (contador == 4)\par
+                    \{\par
+                        Debug.Log("ganaste jugador 1");\par
+                        SceneManager.LoadScene(2); \par
+                \}\par
+                \}\par
+                else\par
+                    contador = 0;\par
+                \}\par
+        \}\par
+    \}\par
+\par
+ public void DiagoPositiva1(int x, int y, Color colorAVerificando)\par
+    \{\par
+        int contador = 0;\par
+        int j = y - 4;\par
+\par
+\par
+        for (int i = x - 3; i <= x + 3; i++ )\par
+        \{\par
+            j++;\par
+            if (j < 0 || j >= height || i < 0 || i >= width)\par
+                continue;\par
+\par
+                GameObject go =grid[i, j];\par
+               \par
+                //Debug.Log(go.GetComponent<Renderer>().material.color);\par
+                //Debug.Log(colorAVerificando);\par
+                if (go.GetComponent<Renderer>().material.color == colorAVerificando)\par
+                \{\par
+                    if (go.GetComponent<Renderer>().material.color == color2)\par
+                    \{\par
+                    contador++;\par
+                    \par
+\par
+                    if (contador == 4)\par
+                    \{\par
+                        Debug.Log("ganaste jugador 2");\par
+                        SceneManager.LoadScene(3); \par
+                \}\par
+                \}\par
+                else\par
+                    contador = 0;\par
+                \}\par
+        \}\par
+    \}\par
+\par
+    public void DiagoNegativa(int x, int y, Color colorAVerificando)\par
+    \{\par
+        int contador = 0;\par
+        int j = y + 4;\par
+\par
+\par
+        for (int i = x - 3; i <= x + 3; i++)\par
+        \{\par
+            j--;\par
+\par
+            if (j < 0 || j >= height || i < 0 || i >= width)\par
+                continue;\par
+\par
+            GameObject go = grid[i, j];\par
+\par
+            if (go.GetComponent<Renderer>().material.color == colorAVerificando)\par
+            \{\par
+                if (go.GetComponent<Renderer>().material.color == color1)\par
+                \{\par
+                contador++;\par
+               \par
+\par
+                if (contador == 4)\par
+                \{\par
+                    Debug.Log("ganaste juagador 1");\par
+                    SceneManager.LoadScene(2);\par
+                \}\par
+            \}\par
+            else\par
+                contador = 0;\par
+            \}\par
+\par
+        \}\par
+    \}\par
+\par
+    public void DiagoNegativa1(int x, int y, Color colorAVerificando)\par
+    \{\par
+        int contador = 0;\par
+        int j = y + 4;\par
+\par
+\par
+        for (int i = x - 3; i <= x + 3; i++)\par
+        \{\par
+            j--;\par
+\par
+            if (j < 0 || j >= height || i < 0 || i >= width)\par
+                continue;\par
+\par
+            GameObject go = grid[i, j];\par
+\par
+            if (go.GetComponent<Renderer>().material.color == colorAVerificando)\par
+            \{\par
+                if (go.GetComponent<Renderer>().material.color == color2)\par
+                \{\par
+                contador++;\par
+               \par
+\par
+                if (contador == 4)\par
+                \{\par
+                    Debug.Log("ganaste jugador 2");\par
+                    SceneManager.LoadScene(3);\par
+                \}\par
+            \}\par
+            else\par
+                contador = 0;\par
+            \}\par
+\par
+        \}\par
+    \}\par
+\par
+\}\par
+}
+ 
